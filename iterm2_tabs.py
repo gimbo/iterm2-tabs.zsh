@@ -158,15 +158,41 @@ COLORS = (
 
 
 def main():
+
     args = parse_args()
+
     if args.list_colors:
         # If listing colors, that's all we do; it's basically for tab
         # completion.
-        for k, _ in COLORS:
-            print(k)
+        for name, _ in COLORS:
+            print(name)
         return
+
+    if args.show_colors:
+
+        # Like list_colors but demo the colors too; this is a separate option
+        # from list_colors because doing this breaks tab completion.
+
+        max_name_length = max(
+            [len(color_name) for (color_name, _) in COLORS]
+        )
+
+        def colorize(msg, fg, bg):
+            _fg = '\x1b[38;2;{};{};{}m'.format(*fg)
+            _bg = '\x1b[48;2;{};{};{}m'.format(*bg)
+            _reset = '\x1b[0m'
+            return '{}{}{}{}'.format(_fg, _bg, msg, _reset)
+
+        for name, (r, g, b) in COLORS:
+            name = name.ljust(max_name_length)
+            white_on_color = colorize(name, fg=(255, 255, 255), bg=(r, g, b))
+            black_on_color = colorize(name, fg=(0, 0, 0), bg=(r, g, b))
+            print('{} {} {}'.format(name, white_on_color, black_on_color))
+        return
+
     if args.title is not None:
         iterm2_tab_title(args.title)
+
     if args.color is not None:
         try:
             rgb = dict(COLORS)[args.color]
@@ -219,8 +245,11 @@ def parse_args():
         '--color', nargs='?',
         help='Set tab color to given (named) color')
     parser.add_argument(
-        '--list-colors', action='store_true',
-        help='List available color names; if specified, only this happens.')
+        '--show-colors', '-S', action='store_true',
+        help='List available color names with demo blocks, and exit.')
+    parser.add_argument(
+        '--list-colors', '-L', action='store_true',
+        help='List available color names, and exit.')
     return parser.parse_args()
 
 
