@@ -1,10 +1,10 @@
-"""iterm2_tabs.py - set iTerm2 tab titles and colors, via its python API."""
+#!/usr/bin/env python
+
+"""iterm2_tabs.py - set iTerm2 tab colors."""
 
 import argparse
 import random
 from collections import namedtuple
-
-import iterm2
 
 
 class Color(namedtuple('ColorBase', ('red', 'green', 'blue'))):
@@ -29,8 +29,6 @@ def main():
         return show_colors()
     if args.color is not None:
         set_current_tab_color_by_escape_codes(args.color)
-    if args.title is not None:
-        iterm2.run_until_complete(make_iterm2_run_fn(args.title))
 
 
 def list_color_names():
@@ -66,31 +64,6 @@ def set_current_tab_color_by_escape_codes(color):
         print(template.format(component=component, value=value), end='')
 
 
-def make_iterm2_run_fn(tab_title):
-
-    async def iterm2_run_fn(connection):
-        window = await get_current_window(connection)
-        if window is None:
-            return
-        await set_current_tab_title(window, tab_title)
-
-    return iterm2_run_fn
-
-
-async def get_current_window(connection):
-    app = await iterm2.async_get_app(connection)
-    return app.current_terminal_window
-
-
-async def set_current_tab_title(window, title):
-    tab = window.current_tab
-    if tab is None:
-        return
-    session = tab.current_session
-    await session.async_set_name(title)
-    await tab.async_set_title(title)
-
-
 def parse_args():
 
     def color_component(value):
@@ -102,8 +75,6 @@ def parse_args():
         return int_value
 
     parser = argparse.ArgumentParser()
-
-    parser.add_argument('--title', '-t', help='Set tab title to given title')
 
     color_group = parser.add_mutually_exclusive_group()
     color_group.add_argument(
