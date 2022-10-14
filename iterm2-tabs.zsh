@@ -85,6 +85,13 @@ iterm2_tab_color_random() {
     $_iterm2_tabs_py --random-color
 }
 alias tcr=iterm2_tab_color_random
+# Dark and light variants
+tcrd() {
+    tc "$((( RANDOM % 128 )))" "$((( RANDOM % 128 )))" "$((( RANDOM % 128 )))"
+}
+tcrl() {
+    tc "$((( RANDOM % 128 ) + 128 ))" "$((( RANDOM % 128 ) + 128 ))" "$((( RANDOM % 128 ) + 128 ))"
+}
 
 
 # Set tab color to some random named color, and echo the name and RGB values,
