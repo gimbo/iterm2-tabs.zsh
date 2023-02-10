@@ -1,30 +1,31 @@
-# zsh plugin for setting iTerm2 tab titles and colors
+# zsh plugin for setting iTerm2 tab/window titles and tab colors
 #
 # Andy Gimblett, 2017-2020
 #
-# This provides the following five functions (and their aliases):
+# This provides the following six functions (and their aliases):
 #
+# iterm2_window_title           (wt)
 # iterm2_tab_title              (tt)
 # iterm2_tab_color              (tc)
 # iterm2_tab_color_named        (tcn)
 # iterm2_tab_color_random       (tcr)
 # iterm2_tab_color_random_named (tcnr)
 #
-# Setting the tab title is performed in a straightforward manner via
-# an echo with some control codes; there are two prerequisites for
-# this to work:
+# Setting the window or tab title is performed in a straightforward manner via
+# an echo with some control codes; there are two prerequisites for this to
+# work:
 #
 # 1. The option "Applications in terminal may change the title" option
 #    must be ticked in your iTerm2 profile's "General" preferences
 #    tab. You need to ensure this.
 #
-# 2. The DISABLE_AUTO_TITLE env var must be set to "true"; this
-#    prevents iTerm2 from automatically overwriting the tab title with
-#    a session name, job name, etc. This env var is set for you
-#    automatically by the iterm2_tab_title function, so you don't need
-#    to do anything here except be aware that those automatic updates
-#    won't be happening once you explicitly define a title - which is
-#    presumably what you wanted to have happen. :-)
+# 2. For tab titles: the DISABLE_AUTO_TITLE env var must be set to "true"; this
+#    prevents iTerm2 from automatically overwriting the tab title with a
+#    session name, job name, etc. This env var is set for you automatically by
+#    the iterm2_tab_title function, so you don't need to do anything here
+#    except be aware that those automatic updates won't be happening once you
+#    explicitly define a title - which is presumably what you wanted to have
+#    happen. :-)
 #
 # All the colour-related commands are handled by a python script (in
 # the same directory).
@@ -42,10 +43,26 @@
 #
 _iterm2_tabs_py=${0:a:h}/iterm2_tabs.py
 
+# Set window title, e.g.
+#
+# $ iterm2_window_title hello
+# $ iterm2_window_title Long titles OK
+#
+# https://www.reddit.com/r/zsh/comments/jp18n3/how_to_rename_iterm2_window_title_with_zsh/gbdj1et/
+#
+iterm2_window_title () {
+    export DISABLE_AUTO_TITLE="true"
+    echo -ne "\e]2;$*\a"
+}
+alias wt=iterm2_window_title
+
+
 # Set tab title, e.g.
 #
 # $ iterm2_tab_title hello
 # $ iterm2_tab_title Long titles OK
+#
+# # https://www.reddit.com/r/zsh/comments/jp18n3/how_to_rename_iterm2_window_title_with_zsh/gbdj1et/
 #
 iterm2_tab_title () {
     export DISABLE_AUTO_TITLE="true"
