@@ -47,7 +47,7 @@ _iterm2_tabs_py=${0:a:h}/iterm2_tabs.py
 # $ iterm2_tab_color 127 45 98
 #
 iterm2_tab_color() {
-    $_iterm2_tabs_py --rgb $1 $2 $3
+    uv run $_iterm2_tabs_py --rgb $1 $2 $3
 }
 alias tc=iterm2_tab_color
 
@@ -60,7 +60,7 @@ alias tc=iterm2_tab_color
 # python script).
 #
 iterm2_tab_color_named() {
-    $_iterm2_tabs_py --color $1
+    uv run $_iterm2_tabs_py --color $1
 }
 alias tcn=iterm2_tab_color_named
 
@@ -70,7 +70,7 @@ alias tcn=iterm2_tab_color_named
 # $ iterm2_tab_color_random
 #
 iterm2_tab_color_random() {
-    $_iterm2_tabs_py --random-color
+    uv run $_iterm2_tabs_py --random-color
 }
 alias tcr=iterm2_tab_color_random
 # Dark and light variants
@@ -88,7 +88,7 @@ tcrl() {
 # $ iterm2_tab_color_random_named
 #
 iterm2_tab_color_random_named() {
-    $_iterm2_tabs_py --random-named-color
+    uv run $_iterm2_tabs_py --random-named-color
 }
 alias tcnr=iterm2_tab_color_random_named
 
@@ -96,7 +96,7 @@ alias tcnr=iterm2_tab_color_random_named
 # Set up tab completion for iterm2_tab_color_named
 
 _tab_color_completion() {
-    _values $($_iterm2_tabs_py --list-colors)
+    _values $(uv run $_iterm2_tabs_py --list-colors)
 }
 compdef _tab_color_completion iterm2_tab_color_named
 
